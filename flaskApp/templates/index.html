@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Ürün Bilgisi Oluşturucu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #e4e4e7;
+        }
+
+        .header a {
+            color: #333;
+            text-decoration: none;
+            margin-left: 20px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .upload-section,
+        .result-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .upload-button {
+            background-color: #f59e0b;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .upload-button svg {
+            margin-right: 8px;
+        }
+
+        .image-preview {
+            width: 100%;
+            height: 300px;
+            background-color: #f4f4f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #6b7280;
+        }
+
+        .form-group input[type="text"],
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .settings {
+            margin-top: 20px;
+        }
+
+        .settings h3 {
+            font-size: 16px;
+            color: #6b7280;
+            margin-bottom: 10px;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 20px;
+        }
+
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .radio-group input[type="radio"] {
+            margin-right: 5px;
+        }
+
+        .generate-button {
+            background-color: #f59e0b;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .result-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #374151;
+        }
+
+        .result-content {
+            background-color: #f9fafb;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tag {
+            background-color: #e5e7eb;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #4b5563;
+        }
+
+        .copy-json {
+            background-color: #f3f4f6;
+            color: #374151;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .copy-json svg {
+            margin-right: 8px;
+        }
+
+        .image-preview {
+            width: 100%;
+            height: 300px;
+            background-color: #f4f4f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .drag-over {
+            background-color: #e5e7eb;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>AI Ürün Bilgisi Oluşturucu</h1>
+            <nav>
+                <a href="#">Home</a>
+                <a href="#">About</a>
+                <a href="#"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd"
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"
+                            fill="currentColor" />
+                    </svg></a>
+                <a href="#"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M23.643 4.937c-.835.37-1.732.62-2.675.733.962-.576 1.7-1.49 2.048-2.578-.9.534-1.897.922-2.958 1.13-.85-.904-2.06-1.47-3.4-1.47-2.572 0-4.658 2.086-4.658 4.66 0 .364.042.718.12 1.06-3.873-.195-7.304-2.05-9.602-4.868-.4.69-.63 1.49-.63 2.342 0 1.616.823 3.043 2.072 3.878-.764-.025-1.482-.234-2.11-.583v.06c0 2.257 1.605 4.14 3.737 4.568-.392.106-.803.162-1.227.162-.3 0-.593-.028-.877-.082.593 1.85 2.313 3.198 4.352 3.234-1.595 1.25-3.604 1.995-5.786 1.995-.376 0-.747-.022-1.112-.065 2.062 1.323 4.51 2.093 7.14 2.093 8.57 0 13.255-7.098 13.255-13.254 0-.2-.005-.402-.014-.602.91-.658 1.7-1.477 2.323-2.41z"
+                            fill="currentColor" />
+                    </svg></a>
+            </nav>
+        </header>
+        <main class="main-content">
+            <section class="upload-section">
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <div class="image-preview" id="image-preview">
+                        <p>Resmi buraya sürükleyin veya yükleyin</p>
+                    </div>
+                    <input type="file" id="upload-button" name="file" class="upload-button" accept="image/*" style="display: none; " required>
+                    
+
+
+                    <div class="settings">
+                        <div class="form-group">
+                            <label for="customPrompt">Custom prompt</label>
+                            <textarea id="customPrompt" name="customPrompt" rows="3"
+                                placeholder="This is a book binder clip."></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" class="generate-button">Generate product information</button>
+                </form>
+            </section>
+            <section id="results" class="result-section" style="display: none;">
+                <h2>Generated product information</h2>
+                <img id="outputImage" class="result-content" width="250px" height="auto">
+                <div>
+                    <h3 class="result-title">Generated title</h3>
+                    <img id="generatedTitle" class="result-content">
+                </div>
+                <div>
+                    <h3 class="result-title">Generated description</h3>
+                    <div id="generatedDescription" class="result-content"></div>
+                </div>
+                <div>
+                    <h3 class="result-title">Generated tags</h3>
+                    <div id="generatedTags" class="tags"></div>
+                </div>
+                <button id="copyJson" class="copy-json">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 9h-9a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2z"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    Copy to JSON
+                </button>
+            </section>
+        </main>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        const uploadButton = document.getElementById('upload-button');
+        const imagePreview = document.getElementById('image-preview');
+
+        // Drag & Drop Events
+        imagePreview.addEventListener('dragover', (event) => {
+            event.preventDefault();
+            imagePreview.classList.add('drag-over');
+        });
+
+        imagePreview.addEventListener('dragleave', () => {
+            imagePreview.classList.remove('drag-over');
+        });
+
+        imagePreview.addEventListener('drop', (event) => {
+            event.preventDefault();
+            imagePreview.classList.remove('drag-over');
+            const file = event.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) {
+                previewImage(file);
+            }
+        });
+
+        imagePreview.addEventListener('click', () => {
+            uploadButton.click();
+        });
+
+        uploadButton.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                previewImage(file);
+            }
+        });
+
+        function previewImage(file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                imagePreview.innerHTML = `<img src="${event.target.result}" alt="Image Preview">`;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        $(document).ready(function () {
+            $('#upload-button').change(function (e) {
+                var file = e.target.files[0];
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#imagePreview').html('<img src="' + e.target.result + '">');
+                }
+                reader.readAsDataURL(file);
+            });
+
+            $('#uploadForm').on('submit', function (event) {
+        event.preventDefault(); // Prevent default form submission
+
+        const formData = new FormData(this); // Get form data
+
+        $.ajax({
+            url: '/upload', // Flask endpoint
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                $('#results').show(); // Show results section
+
+                // Accessing the response correctly
+                $('#generatedTitle').text(response.api_response.suggested_title); // Title
+                $('#generatedDescription').text(response.api_response.product_description); // Description
+
+                // Display tags if available
+                const tags = response.api_response.tags.join(', ');
+                $('#generatedTags').text(tags); // Display tags
+                
+                // Display the output image if necessary
+                $('#outputImage').attr('src', response.api_response.output_image).show(); // Assuming there's an <img> tag with id 'outputImage'
+            },
+            error: function (error) {
+                console.error('Error:', error);
+                alert('An error occurred while uploading the file. Please try again.'); // Notify user of the error
+            }
+        });
+    });
+
+         
+                $('#copyJson').click(function () {
+                    var jsonData = {
+                        
+                        title: $('#generatedTitle').text(),
+                        description: $('#generatedDescription').text(),
+                        tags: Array.from($('#generatedTags .tag')).map(tag => tag.textContent)
+                    };
+                    navigator.clipboard.writeText(JSON.stringify(jsonData, null, 2))
+                        .then(() => {
+                            alert('JSON copied to clipboard!');
+                        })
+                        .catch(err => {
+                            console.error('Failed to copy JSON: ', err);
+                            alert('Failed to copy JSON. Please try again.');
+                        });
+                });
+            });
+    </script>
+</body>
+
+</html>
