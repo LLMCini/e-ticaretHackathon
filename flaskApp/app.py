@@ -1,6 +1,6 @@
 import os
 import base64
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, make_response
 from werkzeug.utils import secure_filename
 from flask_cors import CORS
 import asyncio
@@ -10,14 +10,94 @@ from PIL import Image
 import uuid
 import time 
 import threading
+from transformers import AutoTokenizer, AutoModelForCausalLM
+import torch
+import json
+import torch.backends.cudnn as cudnn
 
 app = Flask(__name__)
+
 UPLOAD_FOLDER = 'uploads'
 OUTPUT_FOLDER = 'C:/Users/reg/Desktop/flask_project/static/outputs'
 ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'webp'}
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['OUTPUT_FOLDER'] = OUTPUT_FOLDER
+
+cudnn.benchmark = True
+# Global değişkenler
+tokenizer = None
+model = None
+
+def load_model():
+    global tokenizer, model
+    model_id = "ytu-ce-cosmos/Turkish-Llama-8b-DPO-v0.1"
+    
+    tokenizer = AutoTokenizer.from_pretrained(model_id,local_files_only=False)
+    
+    model = AutoModelForCausalLM.from_pretrained(
+        model_id,
+        torch_dtype=torch.bfloat16,
+        device_map="auto",
+        low_cpu_mem_usage=True,
+    )
+# Uygulama başladığında modeli yükle
+load_model()
+
+def generate_response(custom_prompt):
+
+    if not isinstance(custom_prompt, str):
+        raise ValueError("custom_prompt must be a string")
+
+    initial_messages = [
+        {
+            "role": "system", 
+            "content": "Job Description: SEO Optimized Product Description and Title for E-commerce Create an e-commerce product title and description for: User Content Write in: Turkish. Product Title (max 60 characters): An SEO-optimized and product title, Include User Content, Add one of these elements to each title: Unique selling point, Key benefit, Target audience, Product feature, Power word (e.g., '1. sınıf', '1 numara', 'A kalite', 'Şahane'). Product Description (150-200 words): Highlight key features and benefits, Aim for a keyword density of 1-2 for the product name, Technical specifications (if applicable), Mention User Content 2-3 times naturally, Use short, clear sentences."
+        },
+        {
+            "role": "user", 
+            "content": custom_prompt  # Ensure custom_prompt is passed correctly
+        }
+    ]
+
+    input_ids = tokenizer.apply_chat_template(
+        initial_messages,
+        add_generation_prompt=True,
+        return_tensors="pt"
+    ).to(model.device)
+    
+    terminators = [
+        tokenizer.eos_token_id,
+        tokenizer.convert_tokens_to_ids("<|eot_id|>")
+    ]
+    
+    with torch.cuda.amp.autocast():
+        outputs = model.generate(
+            input_ids,
+            max_new_tokens=4096,
+            eos_token_id=terminators,
+            do_sample=True,
+            temperature=0.2,
+            top_p=0.9,
+        )
+    
+    response = outputs[0][input_ids.shape[-1]:]
+    response = tokenizer.decode(response, skip_special_tokens=True)    
+    product_name = ""
+    product_description = ""
+
+    lines = response.split('\n')
+    for i, line in enumerate(lines):
+        if "Ürün Başlığı" in line and i + 1 < len(lines):
+            product_name = lines[i + 1].strip().strip('"')
+        if "Ürün Açıklaması" in line and i + 1 < len(lines):
+            product_description = ' '.join(lines[i + 1:]).strip()
+    
+    product_name = " ".join(product_name.split())
+    product_description = " ".join(product_description.split())
+
+  
+    return [product_name,product_description]
 
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
@@ -84,8 +164,20 @@ def upload_file():
         return jsonify({'error': 'No file part'}), 400
 
     file = request.files['file']
+
+    custom_prompt = request.form.get('inp')
+    if not custom_prompt or len(custom_prompt) < 10:  # Minimum 10 karakter olsun gibi bir kontrol
+        return jsonify({"error": "Description too short"}), 400
+  
+    tone_value = request.form.get('tone')
+    if tone_value not in ['0', '1']:  # 0 ve 1 dışındaki değerleri reddet
+        return jsonify({"error": "Invalid tone option"}), 400
+
+
+
     if file.filename == '':
         return jsonify({'error': 'No selected file'}), 400
+
 
     if file and allowed_file(file.filename):
         # Dosya adını güvenli hale getir
@@ -105,22 +197,23 @@ def upload_file():
         file.save(file_path)
 
         absolute_file_path = os.path.abspath(file_path)
+        
+        final_output = generate_response(custom_prompt)
+    
 
         # Run the background task without waiting for it to finish
         image_background(absolute_file_path, abcfilename)
         # Yanıtı hazırlayın
+
+
         return jsonify({
             'api_response': {
-                'suggested_title': 'Generated Title',
-                'product_description': 'Generated Description',
-                'tags': ['tag1', 'tag2'],
+                'suggested_title': final_output[0],
+                'product_description': final_output[1],
                 'token': outputfilename
             }
         }), 200
-
-
-
     return jsonify({'error': 'File type not allowed'}), 400
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", debug=True)
+    app.run(host="0.0.0.0", debug=False)

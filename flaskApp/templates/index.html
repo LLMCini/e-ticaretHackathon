@@ -99,7 +99,7 @@
                         <div class="field mt-5">
                             <label class="label">Ürün kısa açıklaması</label>
                             <div class="control">
-                                <textarea id="customPrompt" name="customPrompt" class="textarea"
+                                <textarea id="customPrompt" name="inp" class="textarea"
                                     placeholder="Ganik Keçi Sütü Reçeli 200gr"></textarea>
                             </div>
                         </div>
@@ -108,11 +108,11 @@
                             <label class="label">Seçenekler</label>
                             <div class="control">
                                 <label class="radio">
-                                    <input type="radio" name="tone" value="background-generate">
+                                    <input type="radio" name="tone" value="1">
                                     Arkaplan değiştirilsin
                                 </label>
                                 <label class="radio">
-                                    <input type="radio" name="tone" value="no-background-generate" checked>
+                                    <input type="radio" name="tone" value="0" checked>
                                     Arkaplan değiştirilmesin
                                 </label>
                             </div>
@@ -268,13 +268,12 @@
                                         // Eğer message "File not yet available" değilse, sınıfı kaldır ve resmi ekle
                                         $('#outputImageContainer').removeClass('skeleton-loader').html('<img id="outputImage" class="image mb-4" width="250" src="' + verResponse.api_response.output_image + '">');
                                         clearInterval(intervalId);  // Beklenen veri geldiğinde intervali durdur
-                                    } else {
+                                    } else if(jqXHR.status == 202){
                                         // Eğer message "File not yet available" ise hiçbir şey yapma
                                         console.log("Dosya henüz mevcut değil.");
                                     }
-
                                     // Hata durumları için işlem yap
-                                    if (jqXHR.status !== 200) {
+                                    else{
                                         console.error('Error during /ver request:', jqXHR.status);
                                     }
                                 }
