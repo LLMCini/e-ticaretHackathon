@@ -69,8 +69,21 @@ Step	Training Loss
 
 
 
-## License
+## Kullanılan Modellerin Lisansları
+> [!WARNING]
+> STABILITY AI CONTROL-LORA COMMUNITY LICENSE AGREEMENT  
+> Ticari amaçlı kullanımlarda dikkat edilmesi gereken maddeler  
+> [MADDE 2](https://huggingface.co/stabilityai/control-lora/blame/1c1c7bcb56224c202c1e624c2128f97c48cebcea/LICENSE.MD) -AYLIK ANLIK AKTİF KULLANICI SAYISI 1.000.000 VE ÜSTÜNDE OLMASI TİCARİ LİSANS GEREKTİRİR-
 
-[MIT](https://choosealicense.com/licenses/mit/)
+> Stability AI CreativeML Open RAIL++-M License 
+> Ticari amaçlı kullanımlarda dikkat edilmesi gereken madde yoktur.
 
+> Apache 2.0
+> Ticari amaçlı kullanımlarda dikkat edilmesi gereken madde yoktur.
+
+> MIT
+> Ticari amaçlı kullanımlarda dikkat edilmesi gereken madde yoktur.
+
+> META LLAMA 3 COMMUNITY LICENSE
+> [MADDE 2](https://huggingface.co/meta-llama/Meta-Llama-3-8B/blob/main/LICENSE) -Aylık aktif kullanıcıları, önceki takvim ayında 700 milyondan fazla aylık aktif kullanıcıya sahipse lisans talep edilmelidir.-
 
