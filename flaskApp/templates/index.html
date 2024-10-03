@@ -8,6 +8,44 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
+        .navbar { 
+        background-color: #f77b00 !important; 
+        padding: 0.75rem 1.5rem !important;
+        border-left: 2px solid #d3dce6 !important;
+        border-right: 2px solid #d3dce6 !important;
+        border-bottom: 2px solid #d3dce6 !important;
+        border-bottom-left-radius: 30px 30px!important;
+        border-bottom-right-radius: 30px 30px!important;
+    }
+
+    .navbar-item:hover{
+        background-color: #f77b00 !important;
+    }
+    .navbar-item.is-size-5 {
+        font-size: 1.125rem !important;
+        margin-right: 1rem !important;
+    }
+
+    .icon svg {
+        transition: transform 0.3s ease !important;
+    }
+
+    .icon:hover svg {
+        transform: scale(1.2) !important;
+    }
+
+    .navbar-burger {
+        color: #3273dc !important;
+    }
+
+    .navbar-brand .title {
+        color:#f0f0f0 !important;
+        font-weight: 700 !important;
+    }
+
+    .navbar-menu {
+        align-items: center !important;
+    }
         body {
             font-family: 'Inter', sans-serif;
         }
@@ -29,8 +67,9 @@
         }
 
         .image-preview {
-            width: 100%;
-            height: 300px;
+            width: 250px;
+            height: 250px;
+            object-fit: contain;
             background-color: #f4f4f5;
             display: flex;
             justify-content: center;
@@ -49,33 +88,51 @@
         .drag-over {
             background-color: #e5e7eb;
         }
+        .image_alani{
+            min-height: 250px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .button{
+            background-color: #f77b00 !important;
+            color: white!important;
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <nav class="navbar" role="navigation" aria-label="main navigation">
+        <nav class="navbar has-shadow is-light" role="navigation" aria-label="main navigation">
             <div class="navbar-brand">
                 <a class="navbar-item" href="#">
-                    <h1 class="title is-4">AI Ürün Bilgisi Oluşturucu</h1>
+                    <h1 class="title is-4">LLMCini AI | Product Background and Description Generator</h1>
+                </a>
+        
+                <!-- Responsive burger menu -->
+                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarMenu">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
                 </a>
             </div>
-            <div class="navbar-menu">
+        
+            <div id="navbarMenu" class="navbar-menu">
                 <div class="navbar-end">
-                    <a class="navbar-item" href="#">Home</a>
-                    <a class="navbar-item" href="#">About</a>
                     <a class="navbar-item" href="#">
-                        <span class="icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"
+                        <span class="icon is-medium">
+                            <svg width="28" height="28" viewBox="0 0 24 24" color="white" fill="currentColor"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" clip-rule="evenodd"
                                     d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
                             </svg>
                         </span>
                     </a>
+        
                     <a class="navbar-item" href="#">
-                        <span class="icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"
+                        <span class="icon is-medium">
+                            <svg width="28" height="28" viewBox="0 0 24 24" color="white" fill="currentColor"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path
                                     d="M23.643 4.937c-.835.37-1.732.62-2.675.733.962-.576 1.7-1.49 2.048-2.578-.9.534-1.897.922-2.958 1.13-.85-.904-2.06-1.47-3.4-1.47-2.572 0-4.658 2.086-4.658 4.66 0 .364.042.718.12 1.06-3.873-.195-7.304-2.05-9.602-4.868-.4.69-.63 1.49-.63 2.342 0 1.616.823 3.043 2.072 3.878-.764-.025-1.482-.234-2.11-.583v.06c0 2.257 1.605 4.14 3.737 4.568-.392.106-.803.162-1.227.162-.3 0-.593-.028-.877-.082.593 1.85 2.313 3.198 4.352 3.234-1.595 1.25-3.604 1.995-5.786 1.995-.376 0-.747-.022-1.112-.065 2.062 1.323 4.51 2.093 7.14 2.093 8.57 0 13.255-7.098 13.255-13.254 0-.2-.005-.402-.014-.602.91-.658 1.7-1.477 2.323-2.41z" />
@@ -90,16 +147,19 @@
             <div class="column">
                 <form id="uploadForm" enctype="multipart/form-data">
                     <div class="box">
-                        <div class="image-preview" id="image-preview">
-                            <p>Resmi buraya sürükleyin veya yükleyin</p>
+                        <div class="image_alani">
+                       <div class="image-preview" id="image-preview">
+                            <p style="text-align:center;">Resmi buraya sürükleyin veya yükleyin</p>
                         </div>
+                    </div>
+                        
                         <input type="file" id="upload-button" name="file" class="file-input" accept="image/*"
                             style="display: none;" required>
 
                         <div class="field mt-5">
                             <label class="label">Ürün kısa açıklaması</label>
                             <div class="control">
-                                <textarea id="customPrompt" name="inp" class="textarea"
+                                <textarea id="customPrompt" name="inp" class="textarea" rows="2s"
                                     placeholder="Ganik Keçi Sütü Reçeli 200gr"></textarea>
                             </div>
                         </div>
@@ -126,9 +186,10 @@
 
             <div id="result" class="column">
                 <div id="results" class="box">
-                    <h2 class="title is-4">Generated product information</h2>
-                    <div id="outputImageContainer" class="skeleton-loader mb-4"
-                        style="min-height: 250px; width: 250px;"></div>
+                    
+                    <div class="image_alani">
+                        <div id="outputImageContainer" class="skeleton-loader mb-4"style="min-height: 250px; width: 250px;"></div>
+                    </div>
 
                     <div class="mb-4">
                         <h3 class="title is-5">Ürün başlık önerisi</h3>
@@ -144,17 +205,6 @@
                         </div>
                     </div>
 
-                    <button id="copyJson" class="button is-info" style="display: none;">
-                        <span class="icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path d="M20 9h-9a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2z" />
-                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                            </svg>
-                        </span>
-                        <span>Copy to JSON</span>
-                    </button>
                 </div>
             </div>
         </div>
@@ -219,7 +269,6 @@
                     <div class="skeleton-loader" style="height: 20px; margin-bottom: 10px;"></div>
                     <div class="skeleton-loader" style="height: 20px;"></div>
                 `);
-                $('#copyJson').hide();
             }
 
             // Form submission
@@ -291,23 +340,8 @@
                 });
             });
 
-
-            // JSON Copy functionality
-            $('#copyJson').click(function () {
-                var jsonData = {
-                    title: $('#generatedTitle').text(),
-                    description: $('#generatedDescription').text(),
-                };
-                navigator.clipboard.writeText(JSON.stringify(jsonData, null, 2))
-                    .then(() => {
-                        alert('JSON copied to clipboard!');
-                    })
-                    .catch(err => {
-                        console.error('Failed to copy JSON: ', err);
-                        alert('Failed to copy JSON. Please try again.');
-                    });
-            });
         });
+            
     </script>
 </body>
 
