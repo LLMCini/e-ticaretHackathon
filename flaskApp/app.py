@@ -116,6 +116,77 @@ def generate_response(custom_prompt):
   
     return [product_name,product_description]
 
+def generate_response(custom_prompt):
+
+    if not isinstance(custom_prompt, str):
+        raise ValueError("custom_prompt must be a string")
+
+    initial_messages = [
+        {
+            "role": "system", 
+            "content": f"""## Job Description: Optimized Product Description and Title for E-commerce
+                Create an e-commerce product title and description for: user_content
+                Write in: Turkish
+                1. Product Title (max 60 characters):
+                - An SEO-optimized product title based on user_content.
+                - Only use the information explicitly mentioned in the description. Do not invent or add any information that is not present in user_content.
+                - Add one of these elements to each title: - Unique selling point - Key benefit - Target audience - Product feature -Power word 
+                2. Product Description (150-200 words):
+                - Highlight key features and benefits
+                - Aim for a keyword density of 1-2% for the product name.
+                - Technical specifications (if applicable)
+                - Mention improved user_content 1 times naturally
+                - Use short, clear sentences
+                Output format:
+                ***Product Title***
+                [Generated title]
+                ***Product Description***
+                [Generated description]"""
+        },
+        {
+            "role": "user", 
+            "content": custom_prompt  # Ensure custom_prompt is passed correctly
+        }
+    ]
+
+    input_ids = tokenizer.apply_chat_template(
+        initial_messages,
+        add_generation_prompt=True,
+        return_tensors="pt"
+    ).to(model.device)
+    
+    terminators = [
+        tokenizer.eos_token_id,
+        tokenizer.convert_tokens_to_ids("<|eot_id|>")
+    ]
+    
+    with torch.cuda.amp.autocast():
+        outputs = model.generate(
+            input_ids,
+            max_new_tokens=4096,
+            eos_token_id=terminators,
+            do_sample=True,
+            temperature=0.2,
+            top_p=0.9,
+        )
+    
+    response = outputs[0][input_ids.shape[-1]:]
+    response = tokenizer.decode(response, skip_special_tokens=True)    
+    product_name = ""
+    product_description = ""
+    
+    lines = response.split('\n')
+    for i, line in enumerate(lines):
+        if "Ürün Başlığı" in line and i + 1 < len(lines):
+            product_name = lines[i + 1].strip().strip('"')
+        if "Ürün Açıklaması" in line and i + 1 < len(lines):
+            product_description = ' '.join(lines[i + 1:]).strip()
+    
+    product_name = " ".join(product_name.split())
+    product_description = " ".join(product_description.split())
+
+  
+    return [product_name,product_description]
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 if not os.path.exists(OUTPUT_FOLDER):
